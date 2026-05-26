@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cosmetic Unit Converter — ml, cc, fl oz &amp; grams (with density)</title>
+<meta name="description" content="Free cosmetic unit converter. Convert between ml, cc, US fl oz, teaspoons, tablespoons, grams and ounces — with a density field for accurate volume-to-weight conversion." />
+<style>
+  :root{--bg:#f7f6f3;--card:#fff;--ink:#1c1c1e;--muted:#6b6b70;--line:#e6e4df;--accent:#3a6ea5;--accent-soft:#eef3f8;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;}
+  .wrap{max-width:760px;margin:0 auto;padding:32px 20px 64px;}
+  header h1{font-size:1.7rem;margin:0 0 6px;}
+  header p.sub{color:var(--muted);margin:0 0 28px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin-bottom:20px;}
+  .row{display:flex;flex-wrap:wrap;gap:16px;}
+  .field{flex:1 1 160px;}
+  label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:5px;}
+  input,select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:1rem;background:#fff;color:var(--ink);}
+  input:focus,select:focus{outline:2px solid var(--accent-soft);border-color:var(--accent);}
+  table{width:100%;border-collapse:collapse;margin-top:4px;}
+  td{padding:10px 6px;border-bottom:1px solid var(--line);}
+  td.u{color:var(--muted);font-size:.9rem;width:45%;}
+  td.v{text-align:right;font-size:1.15rem;font-weight:600;font-variant-numeric:tabular-nums;}
+  .hint{font-size:.82rem;color:var(--muted);margin-top:10px;}
+  h2{font-size:1.15rem;margin:30px 0 10px;}
+  .faq dt{font-weight:600;margin-top:14px;}
+  .faq dd{margin:4px 0 0;color:#34343a;}
+  footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:.88rem;color:var(--muted);}
+  footer a{color:var(--accent);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Cosmetic Unit Converter</h1>
+    <p class="sub">Convert ml, cc, US fl oz, tsp, tbsp, grams and ounces &mdash; with a density field for accurate volume-to-weight.</p>
+  </header>
+
+  <div class="card">
+    <div class="row">
+      <div class="field">
+        <label for="amount">Amount</label>
+        <input id="amount" type="number" min="0" step="any" value="50" />
+      </div>
+      <div class="field">
+        <label for="unit">From unit</label>
+        <select id="unit">
+          <option value="ml">Milliliter (ml)</option>
+          <option value="cc">Cubic centimeter (cc)</option>
+          <option value="l">Liter (L)</option>
+          <option value="floz_us">US fluid ounce (fl oz)</option>
+          <option value="tsp_us">Teaspoon (tsp)</option>
+          <option value="tbsp_us">Tablespoon (tbsp)</option>
+          <option value="g">Gram (g)</option>
+          <option value="oz_wt">Ounce, weight (oz)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="density">Density (g/ml)</label>
+        <input id="density" type="number" min="0" step="any" value="1.0" />
+      </div>
+    </div>
+    <p class="hint">Density matters when converting between volume and weight. Water &amp; toner &asymp; 1.0, lotions &amp; creams &asymp; 0.9&ndash;1.05, oils &asymp; 0.91&ndash;0.93.</p>
+  </div>
+
+  <div class="card">
+    <table>
+      <tbody id="results"></tbody>
+    </table>
+  </div>
+
+  <h2>How to use this converter</h2>
+  <p>Enter an amount and pick the unit you are starting from. To convert between a <strong>volume</strong> (ml, cc, fl oz) and a <strong>weight</strong> (grams, oz), set the product density &mdash; otherwise the tool assumes water-like 1.0 g/ml. For a cream filled by weight but specified in ml, the density is what makes the two line up.</p>
+
+  <h2>FAQ</h2>
+  <dl class="faq">
+    <dt>Is ml the same as cc?</dt>
+    <dd>Yes. 1 ml = 1 cc = 1 cm&sup3;. They are identical for liquids.</dd>
+    <dt>How many ml in a US fluid ounce?</dt>
+    <dd>1 US fl oz = 29.5735 ml. So a 1 fl oz cosmetic bottle holds about 29.6 ml.</dd>
+    <dt>How do I convert ml to grams for a cosmetic?</dt>
+    <dd>Multiply the volume in ml by the density in g/ml. 50 ml of a cream at 0.95 g/ml weighs about 47.5 g.</dd>
+    <dt>Why do my fill weight and fill volume not match?</dt>
+    <dd>Most cosmetics are not water. If the density is below 1.0 the product weighs less than its volume in ml; above 1.0 it weighs more. Always use the actual density.</dd>
+  </dl>
+
+  <footer>
+    Open-source tool. Built and maintained by
+    <a href="https://www.oulete.cn/" target="_blank" rel="noopener">Oulete</a>,
+    a cosmetic packaging &amp; bottle manufacturer. Source on
+    <a href="https://github.com/kevinwowo/cosmetic-unit-converter" target="_blank" rel="noopener">GitHub</a>.
+  </footer>
+</div>
+
+<script src="converter.js"></script>
+<script>
+  var LABELS = {
+    ml: "Milliliter (ml)", cc: "Cubic centimeter (cc)", l: "Liter (L)",
+    floz_us: "US fluid ounce (fl oz)", tsp_us: "Teaspoon (tsp)",
+    tbsp_us: "Tablespoon (tbsp)", g: "Gram (g)", oz_wt: "Ounce, weight (oz)"
+  };
+  var ORDER = ["ml", "cc", "l", "floz_us", "tsp_us", "tbsp_us", "g", "oz_wt"];
+
+  function fmt(n) {
+    if (!isFinite(n)) return "0";
+    if (n !== 0 && Math.abs(n) < 0.001) return n.toExponential(2);
+    return (Math.round(n * 1000) / 1000).toLocaleString(undefined, { maximumFractionDigits: 3 });
+  }
+
+  function render() {
+    var amount = document.getElementById("amount").value;
+    var unit = document.getElementById("unit").value;
+    var density = document.getElementById("density").value;
+    var res = CosmeticConverter.convert(amount, unit, density);
+    var rows = ORDER.filter(function (u) { return u !== unit; }).map(function (u) {
+      return "<tr><td class='u'>" + LABELS[u] + "</td><td class='v'>" + fmt(res[u]) + "</td></tr>";
+    });
+    document.getElementById("results").innerHTML = rows.join("");
+  }
+
+  document.getElementById("amount").addEventListener("input", render);
+  document.getElementById("unit").addEventListener("change", render);
+  document.getElementById("density").addEventListener("input", render);
+  render();
+</script>
+</body>
+</html>
